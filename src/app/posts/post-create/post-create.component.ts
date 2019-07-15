@@ -4,6 +4,8 @@ import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
+
+import {mimeType} from "./mime-type.validator"
 @Component({
     selector:'app-post-create',
     templateUrl:'./post-create.component.html',
@@ -18,6 +20,8 @@ export class PostCreateComponent implements OnInit{
 
     form:FormGroup
     imagePreview:string
+    // imagePreview:Array<string>
+
 
     constructor(
         public postService:PostService,
@@ -34,7 +38,8 @@ export class PostCreateComponent implements OnInit{
             ]}),
             'image':new FormControl(null,{validators:[
                 Validators.required
-            ]})
+            ],
+            asyncValidators:[mimeType]})
         })
         //same components but same diffrent data
         this.route.paramMap.subscribe((paramMap:ParamMap)=>{
@@ -75,8 +80,6 @@ export class PostCreateComponent implements OnInit{
     }
 
     onImagePicked(event:Event){
-        //files is array of files
-        //single file code
         const file = (event.target as HTMLInputElement).files[0]
         this.form.patchValue({image:file})
         this.form.get('image').updateValueAndValidity()
