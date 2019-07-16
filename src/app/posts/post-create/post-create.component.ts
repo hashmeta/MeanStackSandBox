@@ -20,10 +20,7 @@ export class PostCreateComponent implements OnInit{
     isLoading=false
 
     form:FormGroup
-    imagePreview:string
-    images:Array<string>=[]
     imagesObject:{[key:string]: string}={}
-    resultAsString:string
 
 
     constructor(
@@ -85,15 +82,10 @@ export class PostCreateComponent implements OnInit{
         const file = (event.target as HTMLInputElement).files[0]
         this.form.patchValue({image:file})
         this.form.get('image').updateValueAndValidity()
-
-
         const reader=new FileReader()
         reader.onload = () => {
-            //this.resultAsString=reader.result as string
             this.imagesObject[file.name]=reader.result as string
-            //this.images.push(reader.result as string)
-            }
+        }
         reader.readAsDataURL(file)
-        //console.log(this.imagesObject)
         }
 }
