@@ -89,12 +89,11 @@ export class PostCreateComponent implements OnInit{
 
         const reader=new FileReader()
         reader.onload = () => {
-            this.resultAsString=null
-            this.resultAsString=reader.result as string
+            //this.resultAsString=reader.result as string
+            this.imagesObject[file.name]=reader.result as string
             this.images.push(reader.result as string)
             }
         reader.readAsDataURL(file)
-        this.imagesObject[file.name]=this.resultAsString  
-        console.log(this.imagesObject,this.images)
+        console.log(this.imagesObject)
         }
 }
