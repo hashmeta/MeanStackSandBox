@@ -19,9 +19,9 @@
                         <button mat-stroked-button type="button" >Deletebutton</button>
                     </div>
                 </div> -->
-                <div class="image-preview" *ngFor="let imagePreview of images; let i = imagePreview">
-                    <div class="nested-image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-                        <img [src]='imagePreview' [alt]='form.value.title'>
+                <div class="image-preview" *ngFor="let imagePreview of imagesObject| keyvalue; let i = imagePreview">
+                    <div class="nested-image-preview" *ngIf="imagePreview.value !== '' && imagePreview.value && form.get('image').valid">
+                        <img [src]='imagePreview.value' [alt]='form.value.title'>
                     <div class="Deletebutton">
                         <button mat-stroked-button type="button" >Delete</button>
                     </div>
