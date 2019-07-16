@@ -4,8 +4,9 @@ import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
-
 import {mimeType} from "./mime-type.validator"
+
+
 @Component({
     selector:'app-post-create',
     templateUrl:'./post-create.component.html',
@@ -20,7 +21,9 @@ export class PostCreateComponent implements OnInit{
 
     form:FormGroup
     imagePreview:string
-    // imagePreview:Array<string>
+    images:Array<string>=[]
+    imagesObject:{[key:string]: string}={}
+    resultAsString:string
 
 
     constructor(
@@ -36,10 +39,9 @@ export class PostCreateComponent implements OnInit{
             'content':new FormControl(null,{validators:[
                 Validators.required
             ]}),
-            'image':new FormControl(null,{validators:[
-                Validators.required
-            ],
-            asyncValidators:[mimeType]})
+            'image':new FormControl(null,{
+                validators:[Validators.required],
+                asyncValidators:[mimeType]})
         })
         //same components but same diffrent data
         this.route.paramMap.subscribe((paramMap:ParamMap)=>{
@@ -83,10 +85,16 @@ export class PostCreateComponent implements OnInit{
         const file = (event.target as HTMLInputElement).files[0]
         this.form.patchValue({image:file})
         this.form.get('image').updateValueAndValidity()
+
+
         const reader=new FileReader()
         reader.onload = () => {
-            this.imagePreview=reader.result as string
-        }
+            this.resultAsString=null
+            this.resultAsString=reader.result as string
+            this.images.push(reader.result as string)
+            }
         reader.readAsDataURL(file)
-    }
+        this.imagesObject[file.name]=this.resultAsString  
+        console.log(this.imagesObject,this.images)
+        }
 }
