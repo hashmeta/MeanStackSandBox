@@ -70,11 +70,19 @@ export class PostCreateComponent implements OnInit{
         }
         this.isLoading=true
         if(this.mode==='create'){
-            this.postService.onAddPost(
-                this.form.value.title,
-                this.form.value.content,
-                this.form.value.imagesObject
-            )
+
+            if(Array.isArray(this.imagesObject) && this.imagesObject.length){
+                console.log(this.imagesObject)
+                this.postService.onAddPost(
+                    this.form.value.title,
+                    this.form.value.content,
+                    this.form.value.imagesObject
+                )     
+            }
+            else{
+                console.log('Array is empty')
+            }
+            
        
         }else{
             this.postService.updatePost(this.postId,this.form.value.title,this.form.value.content)
