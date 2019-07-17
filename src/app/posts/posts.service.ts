@@ -2,8 +2,9 @@ import {Post} from './post.model'
 import { Injectable } from '@angular/core';
 import {Subject} from 'rxjs'
 import {HttpClient} from '@angular/common/http'
-import {map} from 'rxjs/operators'
+import {map, concat} from 'rxjs/operators'
 import { Router } from '@angular/router';
+import dataURLtoFile from './post-create/dataURLtoFile'
 @Injectable({providedIn:'root'})
 export class PostService{
     private posts:Post[]=[]
@@ -49,8 +50,9 @@ export class PostService{
         postData.append("title",title)
         postData.append("content",content)
         for(let image in imagesObject){
-            var blob = new Blob([image])
-            postData.append("image",blob,title)
+            //var blob = new Blob([image])
+            var file = dataURLtoFile(image, 'hello');
+            postData.append("image",file,'hello')
         }
         this.http.post<{message:string,postId:String}>('http://localhost:3000/api/posts',postData)
         .subscribe((responseData)=>{
