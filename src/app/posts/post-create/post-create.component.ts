@@ -20,14 +20,14 @@ export class PostCreateComponent implements OnInit{
     isLoading=false
 
     form:FormGroup
-    imagesObject:{[key:string]: string}={}
-
+    imagesObject:Array<string>=[]
 
     constructor(
         public postService:PostService,
         public route:ActivatedRoute
     ){}
     ngOnInit(){
+        
         this.form = new FormGroup({
             'title':new FormControl(null,{validators:[
                 Validators.required,
@@ -70,7 +70,11 @@ export class PostCreateComponent implements OnInit{
         }
         this.isLoading=true
         if(this.mode==='create'){
-            this.postService.onAddPost(this.form.value.title,this.form.value.content)
+            this.postService.onAddPost(
+                this.form.value.title,
+                this.form.value.content,
+                this.form.value.imagesObject
+            )
        
         }else{
             this.postService.updatePost(this.postId,this.form.value.title,this.form.value.content)
@@ -83,9 +87,9 @@ export class PostCreateComponent implements OnInit{
         this.form.patchValue({image:file})
         this.form.get('image').updateValueAndValidity()
         const reader=new FileReader()
-        reader.onload = () => {
-            this.imagesObject[file.name]=reader.result as string
-        }
         reader.readAsDataURL(file)
+        reader.onload = () => {
+           this.imagesObject.push(reader.result as string)
         }
+    }
 }
