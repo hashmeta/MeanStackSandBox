@@ -4,7 +4,6 @@ import {Subject} from 'rxjs'
 import {HttpClient} from '@angular/common/http'
 import {map, concat} from 'rxjs/operators'
 import { Router } from '@angular/router';
-import dataURLtoFile from './post-create/dataURLtoFile'
 @Injectable({providedIn:'root'})
 export class PostService{
     private posts:Post[]=[]
@@ -45,15 +44,20 @@ export class PostService{
     getPost(id:string){
         return this.http.get<{_id:string,title:string,content:string}>('http://localhost:3000/api/posts/'+id)
     }
-    onAddPost(title:string,content:string,imagesObject:any){
+    onAddPost(title:string,content:string,imagesObject:Array<string>){
         const postData=new FormData()
         postData.append("title",title)
         postData.append("content",content)
-        for(let image in imagesObject){
-            //var blob = new Blob([image])
-            var file = dataURLtoFile(image, 'hello');
-            postData.append("image",file,'hello')
+        // for(let image in imagesObject){
+        //     postData.append("images",image)
+        // }
+        for (var i = 0; i < imagesObject.length; i++) {
+            // postData.append("images",imagesObject[i])
+            postData.append("images",imagesObject[i])
         }
+        postData.forEach((value, key) => {
+            console.log(key, value);
+        })
         this.http.post<{message:string,postId:String}>('http://localhost:3000/api/posts',postData)
         .subscribe((responseData)=>{
             const post:Post={

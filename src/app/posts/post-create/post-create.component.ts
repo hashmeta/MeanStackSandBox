@@ -37,8 +37,8 @@ export class PostCreateComponent implements OnInit{
                 Validators.required
             ]}),
             'image':new FormControl(null,{
-                validators:[Validators.required],
-                asyncValidators:[mimeType]})
+                validators:[Validators.required]
+            })
         })
         //same components but same diffrent data
         this.route.paramMap.subscribe((paramMap:ParamMap)=>{
@@ -72,12 +72,11 @@ export class PostCreateComponent implements OnInit{
         if(this.mode==='create'){
 
             if(Array.isArray(this.imagesObject) && this.imagesObject.length){
-                console.log(this.imagesObject)
                 this.postService.onAddPost(
                     this.form.value.title,
                     this.form.value.content,
-                    this.form.value.imagesObject
-                )     
+                    this.imagesObject
+                )
             }
             else{
                 console.log('Array is empty')

@@ -16,6 +16,7 @@ const storage=multer.diskStorage({
             error=null
         }
         callback(error,"backend/images")
+        
     },
     filename:(req,file,callback)=>{
         const name=file.originalname.toLowerCase().split(' ').join('-')
@@ -23,17 +24,16 @@ const storage=multer.diskStorage({
         callback(null,name+'-'+Date.now()+'.'+ext)
     }
 })
-router.post('',multer({storage:storage}).array("image",12),(req,res,next)=>{
-    
+router.post('',multer({storage:storage}).array("images[]",12),(req,res,next)=>{
     const post= new Post({
         title:req.body.title,
         content:req.body.content
     })
-
     post.save().then(createdPost=>
-        res.status(201).json({
+        res.status(200).json({
             message:'Post added sucessfully',
-            postId:createdPost._id
+            postId:createdPost._id,
+
         })
     )
 })
