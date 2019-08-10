@@ -10,21 +10,19 @@ const MIME_TYPE_MAP={
 
 const storage=multer.diskStorage({
     destination:(req,file,callback)=>{
-        const isValid=MIME_TYPE_MAP[file.mimetype]
-        let error=new Error('Invalid mine type')
-        if(isValid){
-            error=null
-        }
-        callback(error,"backend/images")
+        callback(null,"backend/images")
         
-    },
+},
     filename:(req,file,callback)=>{
-        const name=file.originalname.toLowerCase().split(' ').join('-')
         const ext=MIME_TYPE_MAP[file.mimetype]
-        callback(null,name+'-'+Date.now()+'.'+ext)
+        callback(null,Date.now()+'.'+ext)
     }
 })
-router.post('',multer({storage:storage}).array("images[]",12),(req,res,next)=>{
+// var cpUpload=upload.fields([{name:'images'}])
+// router.post('',multer({storage:storage}).array("images",12),(req,res,next)=>{
+
+var upload=multer({storage:storage})
+router.post('',upload.fields([{name:'images'}]),(req,res,next)=>{
     const post= new Post({
         title:req.body.title,
         content:req.body.content

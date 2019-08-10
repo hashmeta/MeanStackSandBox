@@ -4,6 +4,14 @@ import {Subject} from 'rxjs'
 import {HttpClient} from '@angular/common/http'
 import {map, concat} from 'rxjs/operators'
 import { Router } from '@angular/router';
+import {dataURItoBlob} from './dataURItoBlob'
+const MIME_TYPE_MAP={
+    'image/png':'png',
+    'image/jpeg':'jpeg',
+    'image/jpg':'jpg'
+}
+let ext:any
+
 @Injectable({providedIn:'root'})
 export class PostService{
     private posts:Post[]=[]
@@ -48,12 +56,11 @@ export class PostService{
         const postData=new FormData()
         postData.append("title",title)
         postData.append("content",content)
-        // for(let image in imagesObject){
-        //     postData.append("images",image)
-        // }
         for (var i = 0; i < imagesObject.length; i++) {
-            // postData.append("images",imagesObject[i])
-            postData.append("images",imagesObject[i])
+            let data:any=dataURItoBlob(imagesObject[i])
+            ext=MIME_TYPE_MAP[data.type]
+            console.log(ext)
+            postData.append("images",new File([data],Date.now()+String(i)+'.'+ext,{type:data.type}))
         }
         postData.forEach((value, key) => {
             console.log(key, value);
